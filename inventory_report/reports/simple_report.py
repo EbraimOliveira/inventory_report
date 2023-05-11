@@ -30,7 +30,7 @@ class SimpleReport:
         return closest_expiration
 
     @classmethod
-    def count_companies(cls, products):
+    def companies(cls, products):
         companies = []
         for product in products:
             companies.append(product["nome_da_empresa"])
@@ -38,7 +38,7 @@ class SimpleReport:
 
     @classmethod
     def most_frequent(cls, products):
-        companies = cls.count_companies(products)
+        companies = cls.companies(products)
         counter = 0
         company = companies[0]
 
