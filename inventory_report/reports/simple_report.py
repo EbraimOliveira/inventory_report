@@ -1,28 +1,41 @@
-from typing import List
 from datetime import datetime
 
 
 class SimpleReport:
-        
+
+    @classmethod
+    def earliest_manufacturing_date(cls, products):
+        earliest_manufacturing = products[0]["data_de_fabricacao"]
+        for product in products:
+            if earliest_manufacturing > product["data_de_fabricacao"]:
+                earliest_manufacturing = product["data_de_fabricacao"]
+        return earliest_manufacturing
+
+    @classmethod
+    def valid_dates(cls, products):
+        currency_data = datetime.today().strftime('%Y-%m-%d')
+        valid_dates = []
+        for product in products:
+            if product['data_de_validade'] >= currency_data:
+                valid_dates.append(product['data_de_validade'])
+        return valid_dates
+
     @classmethod
     def closest_expiration_day(cls, products):
-        currency_data = datetime.today().strftime('%Y-%m-%d')
-        closest_expiration = products[0]['data_de_validade']
-
-        for product in products:
-            diff1 = (currency_data - product['data_de_validade'])
-            diff2 = (currency_data - closest_expiration)
-            if diff1 < diff2:
-                closest_expiration = product['data_de_validade']
-        return closest_expiration    
+        valid_dates = cls.valid_dates(products)
+        closest_expiration = valid_dates[0]
+        for date in valid_dates:
+            if closest_expiration > date:
+                closest_expiration = date
+        return closest_expiration
 
     @classmethod
     def count_companies(cls, products):
         companies = []
         for product in products:
-            companies.append(product['nome_da_empresa'])
+            companies.append(product["nome_da_empresa"])
         return companies
-    
+
     @classmethod
     def most_frequent(cls, products):
         companies = cls.count_companies(products)
@@ -40,11 +53,8 @@ class SimpleReport:
     def generate(cls, products):
         company = cls.most_frequent(products)
         closest_expiration = cls.closest_expiration_day(products)
+        earliest_manufacturing = cls.earliest_manufacturing_date(products)
 
-        return f"""Data de fabricação mais antiga: {list} 
+        return f"""Data de fabricação mais antiga: {earliest_manufacturing}
 Data de validade mais próxima: {closest_expiration}
 Empresa com mais produtos: {company}"""
-
-
-# Por convenção um metódo de classe usa o cls para referenciar a classe (assim como o self referencia o objeto)   
-# O decorator @classmethod define o metodo como metodo de classe. Metodos de classe são aqueles referentes a informações da classe, que não mudam independente da instância.
