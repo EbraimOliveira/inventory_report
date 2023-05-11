@@ -5,6 +5,7 @@ from csv import DictReader
 class CsvImporter(Importer):
     @classmethod
     def import_data(cls, path):
+        if not path.endswith('.csv'):
+            raise ValueError('Arquivo inválido')
         with open(path) as file:
-            read_file = list(DictReader(file))
-        return read_file
+            return list(DictReader(file))
