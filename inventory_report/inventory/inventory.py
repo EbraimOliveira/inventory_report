@@ -8,13 +8,14 @@ from inventory_report.importer.xml_importer import XmlImporter
 class Inventory:
     @classmethod
     def import_data(cls, path, type):
-        path_extension = path.split('.')[-4:]
-        if path_extension[1] == 'csv':
+        path_extension = path.split(".")
+        print("LOG >>>>>>>", path_extension)
+        if path_extension[1] == "csv":
             products = CsvImporter.import_data(path)
-        elif path_extension[1] == 'json':
+        if path_extension[1] == "json":
             products = JsonImporter.import_data(path)
-        elif path_extension[1] == 'xml':
+        if path_extension[1] == "xml":
             products = XmlImporter.import_data(path)
-        if type == 'simples':
+        if type == "simples":
             return SimpleReport.generate(products)
         return CompleteReport.generate(products)
